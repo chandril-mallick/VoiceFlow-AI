@@ -1,0 +1,89 @@
+[build-system]
+requires = ["setuptools>=75.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "voiceflow-ai-backend"
+version = "1.0.0"
+description = "VoiceFlow AI — Production-Ready AI Voice Sales Agent Backend"
+requires-python = ">=3.12"
+dependencies = [
+    # ── Web Framework ──
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "python-multipart>=0.0.12",
+    "websockets>=13.0",
+
+    # ── Database ──
+    "sqlalchemy[asyncio]>=2.0.36",
+    "asyncpg>=0.30.0",
+    "alembic>=1.14.0",
+    "greenlet>=3.1.0",
+
+    # ── Cache & Queue ──
+    "redis[hiredis]>=5.2.0",
+    "celery[redis]>=5.4.0",
+
+    # ── Auth ──
+    "python-jose[cryptography]>=3.3.0",
+    "passlib[bcrypt]>=1.7.4",
+    "bcrypt>=4.2.0,<5.0.0",
+
+    # ── AI / LLM ──
+    "litellm>=1.52.0",
+    "langchain>=0.3.0",
+    "langchain-community>=0.3.0",
+    "langchain-core>=0.3.0",
+    "langgraph>=0.2.0",
+
+    # ── Voice ──
+    "faster-whisper>=1.1.0",
+    "piper-tts>=1.2.0",
+    "soundfile>=0.12.1",
+    "numpy>=1.26.0",
+
+    # ── RAG ──
+    "langchain-qdrant>=0.2.0",
+    "qdrant-client>=1.12.0",
+
+    # ── Document Processing ──
+    "pypdf>=5.0.0",
+    "python-docx>=1.1.0",
+    "beautifulsoup4>=4.12.0",
+    "markdown>=3.7",
+    "aiofiles>=24.1.0",
+
+    # ── Utilities ──
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.6.0",
+    "httpx>=0.28.0",
+    "jinja2>=3.1.0",
+    "python-dotenv>=1.0.0",
+    "langdetect>=1.0.9",
+    "aiosmtplib>=3.0.0",
+    "email-validator>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+    "httpx>=0.28.0",
+    "ruff>=0.8.0",
+    "mypy>=1.13.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "N", "UP"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

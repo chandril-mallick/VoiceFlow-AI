@@ -1,0 +1,64 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+.venv/
+venv/
+env/
+ENV/
+bin/qdrant
+
+# Next.js build output
+.next/
+out/
+
+# Environment files and secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+*.env.*
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDEs and editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.project
+.classpath
+.settings/
+
+# Local databases and storage
+uploads/*
+!uploads/.gitkeep
+recordings/*
+!recordings/.gitkeep
+storage/*
+!storage/.gitkeep
+celerybeat-schedule*
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
