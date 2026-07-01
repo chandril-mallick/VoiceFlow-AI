@@ -1,28 +1,26 @@
-# 🎙️ VoiceFlow AI
+# VoiceFlow AI
 
-### Your 24/7 AI Sales Representative
-
-A production-ready, multi-tenant AI Voice Sales Agent SaaS platform that enables businesses to deploy multilingual AI sales representatives capable of handling voice conversations for lead generation, cold calling, appointment booking, customer support, and product inquiries.
+VoiceFlow AI is a production-ready, multi-tenant AI voice sales agent platform. It enables organizations to deploy multilingual AI representatives to handle incoming and outgoing voice interactions for lead generation, cold calling, appointment booking, and customer support.
 
 ---
 
-## ✨ Key Features
+## Features
 
-| Feature | Description |
-|---------|-------------|
-| 🗣️ **Multilingual Voice** | Bengali, Hindi, English with automatic detection & switching |
-| 🧠 **AI Sales Agent** | LangGraph-powered conversation flow with natural objection handling |
-| 📚 **RAG Knowledge Base** | Upload PDFs, DOCX, CSVs — AI answers from YOUR documents only |
-| 📊 **CRM & Analytics** | Lead scoring, pipeline management, real-time dashboards |
-| 📅 **Appointment Booking** | Google Calendar + Zoom integration |
-| 💬 **WhatsApp & Email** | Automated follow-up messaging |
-| 🏢 **Multi-Tenant SaaS** | Each business gets own branding, prompts, CRM, and AI personality |
-| 🔒 **Enterprise Security** | JWT + RBAC, audit logs, tenant isolation, rate limiting |
-| 🐳 **Fully Local** | Runs entirely on Docker — zero cloud dependency |
+| Feature Area | Description |
+|---|---|
+| **Multilingual Voice Processing** | Automatic detection and switching between English, Hindi, and Bengali. |
+| **Agentic Conversation Flow** | Stateful, multi-turn interaction models powered by LangGraph, with robust objection-handling capabilities. |
+| **Retrieval-Augmented Generation (RAG)** | Knowledge-base ingestion supporting PDF, DOCX, and CSV formats, scoped specifically to tenant documents. |
+| **CRM Integration & Analytics** | Lead scoring, pipeline status tracking, and real-time dashboard visualization. |
+| **Calendar Scheduling** | Automated appointment booking integrated with Google Calendar and Zoom. |
+| **Outbound Communication** | Automatic notification dispatch via WhatsApp Business API and SMTP email. |
+| **Multi-Tenant Architecture** | Tenant-specific branding, system prompts, schemas, and custom AI personality configurations. |
+| **Security & Isolation** | JSON Web Token (JWT) authentication, Role-Based Access Control (RBAC), database tenant isolation, and rate-limiting. |
+| **Self-Hosted Deployment** | Containerized architecture designed to run on local or private cloud infrastructure. |
 
 ---
 
-## 🏗️ Architecture
+## System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -50,129 +48,144 @@ A production-ready, multi-tenant AI Voice Sales Agent SaaS platform that enables
 
 ---
 
-## 🚀 Quick Start
+## Tech Stack
+
+| Component | Technologies |
+|---|---|
+| **Frontend** | Next.js, React, TypeScript, Tailwind CSS, Framer Motion |
+| **Backend** | FastAPI, Python, SQLAlchemy, Alembic |
+| **AI/ML** | LangGraph, LiteLLM, Ollama, Faster Whisper, Piper TTS |
+| **Databases** | PostgreSQL, Redis, Qdrant |
+| **Message Queue** | Celery |
+| **Reverse Proxy** | Nginx |
+
+---
+
+## Project Directory Layout
+
+```
+voiceflow-ai/
+├── backend/               # FastAPI backend codebase
+│   └── src/
+│       ├── ai/            # Voice processing, LLM wrappers, LangGraph agent
+│       ├── auth/          # JWT authentication and Role-Based Access Control
+│       ├── crm/           # CRM routers and data persistence
+│       ├── rag/           # Document parser and retriever modules
+│       ├── integrations/  # External APIs (Email, WhatsApp, Calendar)
+│       ├── models/        # SQLAlchemy schemas
+│       └── workers/       # Celery background tasks
+├── frontend/              # Next.js frontend application
+│   └── src/
+│       ├── app/           # App router views (Dashboard, voice, leads, etc.)
+│       ├── components/    # Common UI components
+│       ├── hooks/         # Custom React hooks
+│       └── lib/           # Auth contexts, API clients
+├── docker/                # Production service configurations (Nginx, etc.)
+├── docs/                  # API and deployment specifications
+└── scripts/               # Bootstrapping and orchestration helpers
+```
+
+---
+
+## Getting Started
 
 ### Prerequisites
-- Docker & Docker Compose
-- 8GB+ RAM (16GB recommended for LLM)
+
+- Docker and Docker Compose
+- Minimum 8 GB RAM (16 GB recommended for running local LLM inference)
 - Git
 
-### 1. Clone & Configure
+### 1. Configuration
+
+Clone the repository and prepare the configuration files:
+
 ```bash
 git clone <repository-url>
 cd voiceflow-ai
-
-# Copy environment template
 cp .env.example .env
 ```
 
-### 2. Start All Services
+Ensure the configuration variables in `.env` are updated for your environment.
+
+### 2. Service Initialization
+
+Launch the required background services (databases, queues, caches):
+
 ```bash
 docker compose up -d
 ```
 
-### 3. Pull AI Models (first time only)
+### 3. Model Provisioning
+
+Download the required local LLM and embedding models (first-time setup):
+
 ```bash
-# Pull the LLM model
+# Retrieve the LLM model
 docker exec -it voiceflow-ai-ollama-1 ollama pull llama3.1:8b
 
-# Pull the embedding model
+# Retrieve the embedding model
 docker exec -it voiceflow-ai-ollama-1 ollama pull nomic-embed-text
 ```
 
-### 4. Run Database Migrations
+### 4. Database Migrations
+
+Apply database migrations to set up the schemas:
+
 ```bash
 docker exec -it voiceflow-ai-backend-1 alembic upgrade head
 ```
 
-### 5. Access the Application
-| Service | URL |
-|---------|-----|
-| Frontend Dashboard | http://localhost |
-| API Documentation | http://localhost/docs |
-| Qdrant Dashboard | http://localhost:6333/dashboard |
+---
+
+## API Reference
+
+### Authentication Endpoints
+
+| Method | URI | Description |
+|---|---|---|
+| `POST` | `/api/v1/auth/register` | Register a new tenant and administrative user. |
+| `POST` | `/api/v1/auth/login` | Authenticate user and issue tokens. |
+| `POST` | `/api/v1/auth/refresh` | Refresh an access token. |
+| `GET` | `/api/v1/auth/me` | Retrieve the authenticated user's profile. |
+
+### CRM Endpoints
+
+| Method | URI | Description |
+|---|---|---|
+| `GET` | `/api/v1/leads` | List leads with filtering and pagination. |
+| `POST` | `/api/v1/leads` | Create a new lead record. |
+| `GET` | `/api/v1/leads/{id}` | Retrieve a specific lead record. |
+| `PUT` | `/api/v1/leads/{id}` | Update an existing lead record. |
+| `DELETE` | `/api/v1/leads/{id}` | Remove a lead record. |
+| `GET` | `/api/v1/conversations` | List conversation records. |
+| `GET` | `/api/v1/analytics/dashboard` | Retrieve analytics for the dashboard view. |
+
+### Knowledge Base Endpoints
+
+| Method | URI | Description |
+|---|---|---|
+| `POST` | `/api/v1/knowledge/upload` | Upload a document for RAG ingestion. |
+| `GET` | `/api/v1/knowledge/documents` | List uploaded knowledge documents. |
+| `POST` | `/api/v1/knowledge/query` | Test query against the RAG system. |
+
+### Voice Interface
+
+| Protocol | URI | Description |
+|---|---|---|
+| `WebSocket` | `/ws/voice` | Establish real-time bidirectional audio streaming. |
 
 ---
 
-## 🛠️ Tech Stack
+## Supported Languages
 
-| Layer | Technology |
-|-------|-----------|
-| **Frontend** | Next.js 15, React 19, TypeScript, Tailwind CSS, ShadCN UI, Framer Motion |
-| **Backend** | FastAPI, Python 3.12, SQLAlchemy 2.0, Alembic |
-| **AI** | LangGraph, LiteLLM, Ollama (llama3.1:8b), Faster Whisper, Piper TTS |
-| **Database** | PostgreSQL 16, Redis 7, Qdrant (vectors) |
-| **Queue** | Celery with Redis broker |
-| **Infrastructure** | Docker Compose, Nginx |
+| Language | Speech-to-Text (STT) | Text-to-Speech (TTS) | AI Agent Support |
+|---|---|---|---|
+| English | Yes (Faster Whisper) | Yes (Piper) | Yes |
+| Hindi | Yes (Faster Whisper) | Yes (Piper) | Yes |
+| Bengali | Yes (Faster Whisper) | Experimental | Yes |
 
 ---
 
-## 📁 Project Structure
+## License
 
-```
-voiceflow-ai/
-├── backend/               # FastAPI + AI + RAG
-│   └── src/
-│       ├── ai/            # Voice pipeline, LLM, LangGraph agent
-│       ├── auth/          # JWT authentication + RBAC
-│       ├── crm/           # CRM router + service
-│       ├── rag/           # Document ingestion + Qdrant retriever
-│       ├── integrations/  # Email, WhatsApp, Calendar, Webhooks
-│       ├── models/        # SQLAlchemy models (8 tables)
-│       └── workers/       # Celery background tasks
-├── frontend/              # Next.js 15 dashboard
-│   └── src/
-│       ├── app/           # Pages (dashboard, voice, leads, etc.)
-│       ├── components/    # Reusable UI components
-│       ├── hooks/         # Custom React hooks
-│       └── lib/           # API client, auth, WebSocket
-├── docker/                # Dockerfiles + Nginx config
-├── docs/                  # API & deployment documentation
-└── scripts/               # Setup and seed scripts
-```
-
----
-
-## 🔌 API Overview
-
-### Authentication
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/v1/auth/register` | Register tenant + admin |
-| POST | `/api/v1/auth/login` | Login |
-| POST | `/api/v1/auth/refresh` | Refresh token |
-| GET | `/api/v1/auth/me` | Current user profile |
-
-### CRM
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET/POST | `/api/v1/leads` | List/Create leads |
-| GET/PUT/DELETE | `/api/v1/leads/{id}` | Manage lead |
-| GET | `/api/v1/conversations` | List conversations |
-| GET | `/api/v1/analytics/dashboard` | Dashboard stats |
-
-### Knowledge Base
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/v1/knowledge/upload` | Upload document |
-| GET | `/api/v1/knowledge/documents` | List documents |
-| POST | `/api/v1/knowledge/query` | Test RAG query |
-
-### Voice
-| WebSocket | `/ws/voice` | Real-time voice streaming |
-
----
-
-## 🌐 Supported Languages
-
-| Language | STT | TTS | Agent |
-|----------|-----|-----|-------|
-| 🇺🇸 English | ✅ | ✅ | ✅ |
-| 🇮🇳 Hindi | ✅ | ✅ | ✅ |
-| 🇧🇩 Bengali | ✅ | ⚠️ | ✅ |
-
----
-
-## 📄 License
-
-MIT License — see [LICENSE](LICENSE) for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
